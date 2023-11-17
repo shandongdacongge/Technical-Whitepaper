@@ -37,6 +37,12 @@ Note: There cannot be any spaces or other special characters in the content of t
 |op|yes|Operation: transfer|
 |tick|yes|Ticker: symbol of PRC-20 in any size and **case-insensitive**, eg. POLS = pols, max length: 18|
 |to|yes|The receiver address, and the amount to send|
+|nonce|no|Unique value, timestamp is recommended|
+
+Inside "to"
+
+|Key|Required|Description|
+|---|---|---|
 |recv|yes|The receiver address|
 |amt|yes|The amount to send|
 
@@ -45,10 +51,52 @@ e.g.
 {"p":"prc-20","op":"transfer","tick":"pols","to":[{"recv":"0x22222222222222222222222222222222222222222222","amt":"1000000"}]}
 ```
 
-### Procy Transfer 
-pending
+### Proxy Transfer 
+
+Proxy transfer allows the authorized party to transfer money through signature, which is generally used in trading platforms, and it can be used alone.
+
+It can also be used in conjunction with freezing, and generally requires cooperation.
+
+|Key|Required|Description|
+|---|---|---|
+|p|yes|Protocol: prc-20 must be lowercase|
+|op|yes|Operation: proxy_transfer|
+|proxy|yes|array object, Agent information.|
+
+Inside "proxy"
+
+|Key|Required|Description|
+|---|---|---|
+|tick|yes|Ticker: symbol of PRC-20 in any size and **case-insensitive**, eg. POLS = pols, max length: 18|
+|from|yes|Seller address|
+|to|yes|Buyer address|
+|amt|yes|The amount to send|
+|value|yes|The matic value|
+|nonce|no|Unique value, timestamp is recommended|
+
 ### Freeze Sell
-pending
+Freeze funds, generally used with proxy, send the inscription to zero address, or platform address.
+
+|Key|Required|Description|
+|---|---|---|
+|p|yes|Protocol: prc-20 must be lowercase|
+|op|yes|Operation：freeze_sell|
+|freeze|yes|array object, Agent information.|
+
+Inside "freeze"
+
+|Key|Required|Description|
+|---|---|---|
+|tick|yes|Ticker: symbol of PRC-20 in any size and **case-insensitive**, eg. POLS = pols, max length: 18|
+|nonce|no|Unique value, timestamp is recommended|
+|platform|yes|The platform address|
+|seller|yes|The seller address|
+|amt|yes|The amount to send|
+|value|yes|The matic value|
+|gasPrice|yes|gasPrice|
+|sign|yes|The seller authorizes the signature to verify the use|
+
+
 
 ## Detailed examples
 
@@ -81,16 +129,13 @@ pending
   "p": "prc-20",
   "op": "transfer", //transfer operation
   "tick": "pols",
-  "to": [ //batch transfer, the sum of amt must equal the previous amt param
+  "to": [ 
     {
       "recv": "0x22222222222222222222222222222222222222222222", //receiver address
-      "amt": "50000000" //receiver amount
-    },
-    {
-      "recv": "0x33333333333333333333333333333333333333333333",
-      "amt": "50000000"
+      "amt": "100000000" //receiver amount
     }
   ]
+  "nonce": "1002"
 }
 // proxy transfer; send 0eth from self to 0x0000000000000000000000000000000000000000 or platform address
 pending
